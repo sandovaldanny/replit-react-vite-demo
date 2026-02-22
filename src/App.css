@@ -49,6 +49,58 @@ body {
   font-size: 1rem;
 }
 
+.button-group {
+  margin-top: 0.9rem;
+  display: flex;
+  gap: 0.65rem;
+}
+
+.button-group button {
+  appearance: none;
+  border: 0;
+  border-radius: 999px;
+  padding: 0.65rem 1rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 150ms ease, box-shadow 150ms ease, filter 150ms ease;
+}
+
+.button-group button:hover {
+  transform: translateY(-1px);
+}
+
+.button-group button:active {
+  transform: translateY(0);
+}
+
+.button-group button:disabled {
+  cursor: not-allowed;
+  filter: grayscale(0.2);
+  opacity: 0.6;
+  transform: none;
+}
+
+.btn-primary {
+  color: #fff;
+  background: linear-gradient(120deg, #ff512f, #f09819);
+  box-shadow: 0 8px 18px rgb(240 152 25 / 38%);
+}
+
+.btn-primary:hover:not(:disabled) {
+  box-shadow: 0 12px 24px rgb(255 81 47 / 45%);
+}
+
+.btn-secondary {
+  color: #0f172a;
+  background: linear-gradient(120deg, #56ccf2, #2f80ed);
+  box-shadow: 0 8px 18px rgb(47 128 237 / 28%);
+}
+
+.btn-secondary:hover {
+  box-shadow: 0 12px 24px rgb(86 204 242 / 35%);
+}
+
 .greeting-card p {
   margin-top: 1rem;
   margin-bottom: 0;

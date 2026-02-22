@@ -4,6 +4,7 @@ const namePattern = /^[A-Za-zÁÉÍÓÚáéíóúÑñÜü]+$/
 
 export default function GreetingForm() {
   const [name, setName] = useState('')
+  const [submittedName, setSubmittedName] = useState('')
 
   const validationMessage = useMemo(() => {
     const trimmedName = name.trim()
@@ -20,17 +21,27 @@ export default function GreetingForm() {
   }, [name])
 
   const greeting = useMemo(() => {
-    const trimmedName = name.trim()
-    if (!trimmedName) {
+    if (!submittedName) {
       return 'Por favor, ingresa tu nombre para saludarte cordialmente.'
     }
 
-    if (validationMessage) {
-      return 'Corrige el nombre para continuar con el saludo.'
+    return `Mucho gusto, ${submittedName}. Es un placer saludarte.`
+  }, [submittedName])
+
+  const handleGreet = () => {
+    const trimmedName = name.trim()
+
+    if (!trimmedName || validationMessage) {
+      return
     }
 
-    return `Mucho gusto, ${trimmedName}. Es un placer saludarte.`
-  }, [name, validationMessage])
+    setSubmittedName(trimmedName)
+  }
+
+  const handleClear = () => {
+    setName('')
+    setSubmittedName('')
+  }
 
   return (
     <section className="greeting-card" aria-label="Formulario de saludo">
@@ -43,6 +54,19 @@ export default function GreetingForm() {
         onChange={(event) => setName(event.target.value)}
         placeholder="Escribe tu nombre"
       />
+      <div className="button-group">
+        <button
+          type="button"
+          className="btn-primary"
+          onClick={handleGreet}
+          disabled={!name.trim() || Boolean(validationMessage)}
+        >
+          Saludar
+        </button>
+        <button type="button" className="btn-secondary" onClick={handleClear}>
+          Limpiar
+        </button>
+      </div>
       {validationMessage ? <p>{validationMessage}</p> : null}
       <p>{greeting}</p>
     </section>
