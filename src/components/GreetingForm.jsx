@@ -4,9 +4,10 @@ const namePattern = /^[A-Za-zÁÉÍÓÚáéíóúÑñÜü]+$/
 
 export default function GreetingForm() {
   const [name, setName] = useState('')
-  const [submittedName, setSubmittedName] = useState('')
+  const [lastName, setLastName] = useState('')
+  const [submittedFullName, setSubmittedFullName] = useState('')
 
-  const validationMessage = useMemo(() => {
+  const nameValidationMessage = useMemo(() => {
     const trimmedName = name.trim()
 
     if (!trimmedName) {
@@ -20,27 +21,48 @@ export default function GreetingForm() {
     return ''
   }, [name])
 
-  const greeting = useMemo(() => {
-    if (!submittedName) {
-      return 'Por favor, ingresa tu nombre para saludarte cordialmente.'
+  const lastNameValidationMessage = useMemo(() => {
+    const trimmedLastName = lastName.trim()
+
+    if (!trimmedLastName) {
+      return ''
     }
 
-    return `Mucho gusto, ${submittedName}. Es un placer saludarte.`
-  }, [submittedName])
+    if (!namePattern.test(trimmedLastName)) {
+      return 'El apellido solo puede contener letras (sin espacios ni números).'
+    }
+
+    return ''
+  }, [lastName])
+
+  const greeting = useMemo(() => {
+    if (!submittedFullName) {
+      return 'Por favor, ingresa tu nombre y apellido para saludarte cordialmente.'
+    }
+
+    return `Mucho gusto, ${submittedFullName}. Es un placer saludarte.`
+  }, [submittedFullName])
 
   const handleGreet = () => {
     const trimmedName = name.trim()
+    const trimmedLastName = lastName.trim()
 
-    if (!trimmedName || validationMessage) {
+    if (
+      !trimmedName ||
+      !trimmedLastName ||
+      nameValidationMessage ||
+      lastNameValidationMessage
+    ) {
       return
     }
 
-    setSubmittedName(trimmedName)
+    setSubmittedFullName(`${trimmedName} ${trimmedLastName}`)
   }
 
   const handleClear = () => {
     setName('')
-    setSubmittedName('')
+    setLastName('')
+    setSubmittedFullName('')
   }
 
   return (
@@ -54,12 +76,25 @@ export default function GreetingForm() {
         onChange={(event) => setName(event.target.value)}
         placeholder="Escribe tu nombre"
       />
+      <label htmlFor="last-name-input">Apellido</label>
+      <input
+        id="last-name-input"
+        type="text"
+        value={lastName}
+        onChange={(event) => setLastName(event.target.value)}
+        placeholder="Escribe tu apellido"
+      />
       <div className="button-group">
         <button
           type="button"
           className="btn-primary"
           onClick={handleGreet}
-          disabled={!name.trim() || Boolean(validationMessage)}
+          disabled={
+            !name.trim() ||
+            !lastName.trim() ||
+            Boolean(nameValidationMessage) ||
+            Boolean(lastNameValidationMessage)
+          }
         >
           Saludar
         </button>
@@ -67,7 +102,8 @@ export default function GreetingForm() {
           Limpiar
         </button>
       </div>
-      {validationMessage ? <p>{validationMessage}</p> : null}
+      {nameValidationMessage ? <p>{nameValidationMessage}</p> : null}
+      {lastNameValidationMessage ? <p>{lastNameValidationMessage}</p> : null}
       <p>{greeting}</p>
     </section>
   )
