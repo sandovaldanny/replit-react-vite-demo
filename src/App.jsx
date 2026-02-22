@@ -1,5 +1,4 @@
 import GreetingForm from './components/GreetingForm'
-import './App.css'
 
 export default function App() {
   return (

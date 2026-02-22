@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 
 const namePattern = /^[A-Za-zÁÉÍÓÚáéíóúÑñÜü]+$/
 
@@ -7,46 +7,24 @@ export default function GreetingForm() {
   const [lastName, setLastName] = useState('')
   const [submittedFullName, setSubmittedFullName] = useState('')
 
-  const nameValidationMessage = useMemo(() => {
-    const trimmedName = name.trim()
+  const trimmedName = name.trim()
+  const trimmedLastName = lastName.trim()
 
-    if (!trimmedName) {
-      return ''
-    }
+  const nameValidationMessage =
+    trimmedName && !namePattern.test(trimmedName)
+      ? 'El nombre solo puede contener letras (sin espacios ni números).'
+      : ''
 
-    if (!namePattern.test(trimmedName)) {
-      return 'El nombre solo puede contener letras (sin espacios ni números).'
-    }
+  const lastNameValidationMessage =
+    trimmedLastName && !namePattern.test(trimmedLastName)
+      ? 'El apellido solo puede contener letras (sin espacios ni números).'
+      : ''
 
-    return ''
-  }, [name])
-
-  const lastNameValidationMessage = useMemo(() => {
-    const trimmedLastName = lastName.trim()
-
-    if (!trimmedLastName) {
-      return ''
-    }
-
-    if (!namePattern.test(trimmedLastName)) {
-      return 'El apellido solo puede contener letras (sin espacios ni números).'
-    }
-
-    return ''
-  }, [lastName])
-
-  const greeting = useMemo(() => {
-    if (!submittedFullName) {
-      return 'Por favor, ingresa tu nombre y apellido para saludarte cordialmente.'
-    }
-
-    return `Mucho gusto, ${submittedFullName}. Es un placer saludarte.`
-  }, [submittedFullName])
+  const greeting = submittedFullName
+    ? `Mucho gusto, ${submittedFullName}. Es un placer saludarte.`
+    : 'Por favor, ingresa tu nombre y apellido para saludarte cordialmente.'
 
   const handleGreet = () => {
-    const trimmedName = name.trim()
-    const trimmedLastName = lastName.trim()
-
     if (
       !trimmedName ||
       !trimmedLastName ||
@@ -90,8 +68,8 @@ export default function GreetingForm() {
           className="btn-primary"
           onClick={handleGreet}
           disabled={
-            !name.trim() ||
-            !lastName.trim() ||
+            !trimmedName ||
+            !trimmedLastName ||
             Boolean(nameValidationMessage) ||
             Boolean(lastNameValidationMessage)
           }
